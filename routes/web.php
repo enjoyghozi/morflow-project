@@ -13,10 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-});
 
 Auth::routes();
 
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    });
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/teams', [App\Http\Controllers\TeamController::class, 'index'])->name('team');
+    Route::post('store/', [App\Http\Controllers\TeamController::class, 'store'])->name('team.store');
+    Route::put('update/{teams}', [App\Http\Controllers\TeamController::class, 'update'])->name('team.update');
+    Route::delete('delete/{teams}', [App\Http\Controllers\TeamController::class, 'destroy'])->name('team.destroy');
+
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+    Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
